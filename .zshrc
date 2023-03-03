@@ -110,50 +110,11 @@ alias ohmyzsh="code ~/.oh-my-zsh"
 # Get latest git branches on local
 alias gbl="git for-each-ref --sort=committerdate refs/heads/ --format='%(color: red)%(committerdate:short) %(color: cyan)%(refname:short)'"
 
-# LEAFTRADE THINGS
-export LOCAL_UID=$(id -u) 
-export LOCAL_GID=$(id -g)
-
-# Leaftrade Testing
-pytest_web() {
-    module=$1
-    web_container_id=$(docker ps --filter name=web --quiet)
-
-    if [[ -n $web_container_id ]] ; then
-        test_command="docker exec -it ${web_container_id} pytest"
-    else
-        test_command="docker compose run web pytest"
-    fi
-
-    if [[ $module == "all" ]] ; then
-        test_command="${test_command} --show-capture=all -x --reuse-db"
-    else
-        test_command="${test_command} -raW --reuse-db $1"
-    fi
-
-    eval ${test_command}
-}
-
-# For LT Local Env on K8s
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-export C_INCLUDE_PATH=/opt/homebrew/Cellar/librdkafka/1.9.2/include
-export LIBRARY_PATH=/opt/homebrew/Cellar/librdkafka/1.9.2/lib
-export REDPANDA_BROKERS=redpanda-dev:9092
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Kubectl auto completion
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
-
-# Minikube alias
-alias mk="minikube"
-
-# Go stuff
-export GOPATH=$HOME/go
-export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 # Iterm2 Shell Integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
